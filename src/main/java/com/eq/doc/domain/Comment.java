@@ -1,0 +1,38 @@
+package com.eq.doc.domain;
+
+import com.easy.query.core.annotation.Column;
+import com.easy.query.core.annotation.EasyAlias;
+import com.easy.query.core.annotation.EasyAssertMessage;
+import com.easy.query.core.annotation.EntityProxy;
+import com.easy.query.core.annotation.Table;
+import com.easy.query.core.proxy.ProxyEntityAvailable;
+import com.eq.doc.domain.proxy.CommentProxy;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+/**
+ * create time 2025/8/5 21:15
+ * 文件说明
+ *
+ * @author xuejiaming
+ */
+@Data
+@Table("t_comment")
+@EntityProxy
+@EasyAlias("t_comment")
+@EasyAssertMessage("未找到对应的评论信息")
+public class Comment implements ProxyEntityAvailable<Comment , CommentProxy> {
+    @Column(primaryKey = true,comment = "评论id")
+    private String id;
+    @Column(comment = "父id")
+    private String parentId;
+    @Column(comment = "帖子内容")
+    private String content;
+    @Column(comment = "用户id",nullable = false)
+    private String userId;
+    @Column(comment = "帖子id",nullable = false)
+    private String postId;
+    @Column(comment = "回复时间")
+    private LocalDateTime createAt;
+}
