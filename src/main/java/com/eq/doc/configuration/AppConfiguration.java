@@ -1,22 +1,15 @@
-package com.eq.doc;
+package com.eq.doc.configuration;
 
 import com.easy.query.api.proxy.client.EasyEntityQuery;
-import com.easy.query.core.annotation.Table;
-import com.easy.query.core.api.client.EasyQueryClient;
-import com.easy.query.core.basic.api.database.CodeFirstCommand;
 import com.easy.query.core.basic.api.database.DatabaseCodeFirst;
-import com.easy.query.core.context.QueryRuntimeContext;
-import com.easy.query.core.metadata.EntityMetadata;
-import com.easy.query.core.metadata.EntityMetadataManager;
-import com.easy.query.core.util.EasyClassUtil;
-import com.easy.query.core.util.EasyCollectionUtil;
-import com.easy.query.core.util.EasyPackageUtil;
+import com.easy.query.core.basic.jdbc.tx.Transaction;
 import com.eq.doc.domain.Category;
 import com.eq.doc.domain.CategoryPost;
 import com.eq.doc.domain.Comment;
 import com.eq.doc.domain.Like;
 import com.eq.doc.domain.Post;
 import com.eq.doc.domain.User;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -43,14 +35,14 @@ public class AppConfiguration {
 
     public AppConfiguration(EasyEntityQuery easyEntityQuery) {
         this.easyEntityQuery = easyEntityQuery;
+    }
+
+    @PostConstruct
+    public void init() {
+
         DatabaseCodeFirst databaseCodeFirst = easyEntityQuery.getDatabaseCodeFirst();
         databaseCodeFirst.createDatabaseIfNotExists();
         easyEntityQuery.syncTableByPackage("com.eq.doc.domain");
-    }
-
-    @Pointcut
-    public void init() {
-
         boolean any = easyEntityQuery.queryable(User.class)
                 .any();
         if(any){
@@ -73,6 +65,16 @@ public class AppConfiguration {
 
         // 6. 生成点赞数据（每篇帖子1-5个赞）
         List<Like> likes = generateLikes(users, posts);
+        try(Transaction transaction = easyEntityQuery.beginTransaction()){
+            easyEntityQuery.insertable(users).executeRows();
+            easyEntityQuery.insertable(categories).executeRows();
+            easyEntityQuery.insertable(posts).executeRows();
+            easyEntityQuery.insertable(categoryPosts).executeRows();
+            easyEntityQuery.insertable(comments).executeRows();
+            easyEntityQuery.insertable(likes).executeRows();
+            transaction.commit();
+        }
+
     }// 生成用户数据
 
     private static List<User> generateUsers(int count) {
