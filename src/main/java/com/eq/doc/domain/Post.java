@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
  * @author xuejiaming
  */
 @Data
-@Table("t_Post")
+@Table("t_post")
 @EntityProxy
-@EasyAlias("t_Post")
+@EasyAlias("t_post")
 @EasyAssertMessage("未找到对应的帖子信息")
 public class Post implements ProxyEntityAvailable<Post, PostProxy> {
     @Column(primaryKey = true,comment = "帖子id")
