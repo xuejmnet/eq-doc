@@ -43,6 +43,8 @@ public class AppConfiguration {
 
     public AppConfiguration(EasyEntityQuery easyEntityQuery) {
         this.easyEntityQuery = easyEntityQuery;
+        DatabaseCodeFirst databaseCodeFirst = easyEntityQuery.getDatabaseCodeFirst();
+        databaseCodeFirst.createDatabaseIfNotExists();
         easyEntityQuery.syncTableByPackage("com.eq.doc.domain");
     }
 
