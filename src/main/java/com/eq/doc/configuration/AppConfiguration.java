@@ -52,13 +52,14 @@ public class AppConfiguration {
         List<User> users = generateUsers(5);
 
         // 2. 生成分类数据（3个分类）
-        List<Category> categories = generateCategories(3);
+        List<Category> categories = generateCategories(10);
 
         // 3. 生成帖子数据（每个用户发2-3篇帖子）
         List<Post> posts = generatePosts(users, categories);
 
         // 4. 生成分类-帖子关联数据
-        List<CategoryPost> categoryPosts = generateCategoryPosts(posts, categories);
+        List<CategoryPost> categoryPosts1 = generateCategoryPosts(posts, categories);
+        List<CategoryPost> categoryPosts2 = generateCategoryPosts(posts, categories);
 
         // 5. 生成评论数据（每篇帖子2-4条评论）
         List<Comment> comments = generateComments(users, posts);
@@ -69,7 +70,8 @@ public class AppConfiguration {
             easyEntityQuery.insertable(users).executeRows();
             easyEntityQuery.insertable(categories).executeRows();
             easyEntityQuery.insertable(posts).executeRows();
-            easyEntityQuery.insertable(categoryPosts).executeRows();
+            easyEntityQuery.insertable(categoryPosts1).executeRows();
+            easyEntityQuery.insertable(categoryPosts2).executeRows();
             easyEntityQuery.insertable(comments).executeRows();
             easyEntityQuery.insertable(likes).executeRows();
             transaction.commit();

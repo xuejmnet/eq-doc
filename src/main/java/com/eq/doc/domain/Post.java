@@ -8,11 +8,15 @@ import com.easy.query.core.annotation.Navigate;
 import com.easy.query.core.annotation.Table;
 import com.easy.query.core.enums.RelationTypeEnum;
 import com.easy.query.core.proxy.ProxyEntityAvailable;
+import com.eq.doc.domain.proxy.CategoryPostProxy;
+import com.eq.doc.domain.proxy.CategoryProxy;
+import com.eq.doc.domain.proxy.CommentProxy;
 import com.eq.doc.domain.proxy.PostProxy;
 import com.eq.doc.domain.proxy.UserProxy;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * create time 2025/8/4 22:53
@@ -45,4 +49,24 @@ public class Post implements ProxyEntityAvailable<Post, PostProxy> {
             targetProperty = {UserProxy.Fields.id},
             required = true)
     private User user;
+
+
+    /**
+     * 评论信息
+     **/
+    @Navigate(value = RelationTypeEnum.OneToMany,
+            selfProperty = {PostProxy.Fields.id},
+            targetProperty = {CommentProxy.Fields.postId})
+    private List<Comment> commentList;
+
+
+    /**
+     * 帖子类目信息
+     **/
+    @Navigate(value = RelationTypeEnum.ManyToMany,
+            selfProperty = {PostProxy.Fields.id},
+            selfMappingProperty = {CategoryPostProxy.Fields.postId},
+            mappingClass = CategoryPost.class, targetProperty = {CategoryProxy.Fields.id},
+            targetMappingProperty = {CategoryPostProxy.Fields.categoryId}, subQueryToGroupJoin = true)
+    private List<Category> categoryList;
 }

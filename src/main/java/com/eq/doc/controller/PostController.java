@@ -7,12 +7,17 @@ import com.easy.query.core.func.def.enums.OrderByModeEnum;
 import com.easy.query.core.util.EasyStringUtil;
 import com.eq.doc.domain.Post;
 import com.eq.doc.dto.post.PostDTO;
+import com.eq.doc.dto.post.PostPage10Response;
+import com.eq.doc.dto.post.PostPage11Response;
 import com.eq.doc.dto.post.PostPage3Request;
 import com.eq.doc.dto.post.PostPage4Request;
 import com.eq.doc.dto.post.PostPage4Response;
 import com.eq.doc.dto.post.PostPage6Response;
 import com.eq.doc.dto.post.PostPage7Request;
+import com.eq.doc.dto.post.PostPage8Response;
+import com.eq.doc.dto.post.PostPage9Response;
 import com.eq.doc.dto.post.PostPageRequest;
+import com.eq.doc.dto.post.proxy.PostPage10ResponseProxy;
 import com.eq.doc.dto.post.proxy.PostPage4ResponseProxy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -117,6 +122,7 @@ public class PostController {
                 )
                 .toPageResult(request.getPageIndex(), request.getPageSize());
     }
+
     @PostMapping("/page6")
     public EasyPageResult<PostPage6Response> page6(@RequestBody PostPage4Request request) {
         return easyEntityQuery.queryable(Post.class)
@@ -133,12 +139,13 @@ public class PostController {
                 .selectAutoInclude(PostPage6Response.class)
                 .toPageResult(request.getPageIndex(), request.getPageSize());
     }
+
     @PostMapping("/page7")
     public EasyPageResult<Post> page7(@RequestBody PostPage7Request request) {
         return easyEntityQuery.queryable(Post.class)
                 .filterConfigure(NotNullOrEmptyValueFilter.DEFAULT_PROPAGATION_SUPPORTS)
-                .include(t_post -> t_post.user(),uq->{
-                    uq.select(u->u.FETCHER.id().name());
+                .include(t_post -> t_post.user(), uq -> {
+                    uq.select(u -> u.FETCHER.id().name());
                 })
                 .where(t_post -> {
                     t_post.title().contains(request.getTitle());
@@ -146,17 +153,65 @@ public class PostController {
                 })
                 .toPageResult(request.getPageIndex(), request.getPageSize());
     }
+
     @PostMapping("/selectAutoInclude")
     public List<PostDTO> selectAutoInclude(@RequestBody PostPage7Request request) {
         return easyEntityQuery.queryable(Post.class)
                 .filterConfigure(NotNullOrEmptyValueFilter.DEFAULT_PROPAGATION_SUPPORTS)
-                .include(t_post -> t_post.user(),uq->{
-                    uq.select(u->u.FETCHER.id().name());
+                .include(t_post -> t_post.user(), uq -> {
+                    uq.select(u -> u.FETCHER.id().name());
                 })
                 .where(t_post -> {
                     t_post.title().contains(request.getTitle());
                     t_post.user().name().contains(request.getUserName());
                 })
                 .selectAutoInclude(PostDTO.class).toList();
+    }
+
+    @PostMapping("/postWithComments")
+    public List<PostPage8Response> postWithComments(@RequestBody PostPage7Request request) {
+        return easyEntityQuery.queryable(Post.class)
+                .filterConfigure(NotNullOrEmptyValueFilter.DEFAULT_PROPAGATION_SUPPORTS)
+                .where(t_post -> {
+                    t_post.title().contains(request.getTitle());
+                    t_post.user().name().contains(request.getUserName());
+                })
+                .selectAutoInclude(PostPage8Response.class).toList();
+    }
+
+    @PostMapping("/postWithComment2")
+    public List<PostPage9Response> postWithComment2(@RequestBody PostPage7Request request) {
+        return easyEntityQuery.queryable(Post.class)
+                .filterConfigure(NotNullOrEmptyValueFilter.DEFAULT_PROPAGATION_SUPPORTS)
+                .where(t_post -> {
+                    t_post.title().contains(request.getTitle());
+                    t_post.user().name().contains(request.getUserName());
+                })
+                .selectAutoInclude(PostPage9Response.class).toList();
+    }
+
+    @PostMapping("/postWithComment3")
+    public List<PostPage10Response> postWithComment(@RequestBody PostPage7Request request) {
+        return easyEntityQuery.queryable(Post.class)
+                .filterConfigure(NotNullOrEmptyValueFilter.DEFAULT_PROPAGATION_SUPPORTS)
+                .where(t_post -> {
+                    t_post.title().contains(request.getTitle());
+                    t_post.user().name().contains(request.getUserName());
+                })
+                .select(t_post -> new PostPage10ResponseProxy()
+                        .selectAll(t_post)
+                        .userName().set(t_post.user().name())
+                        .commentContent().set(t_post.commentList().where(c->c.parentId().eq("0")).elements(0,2).joining(c->c.content()))
+                ).toList();
+    }
+    @PostMapping("/postList4")
+    public List<PostPage11Response> postList4(@RequestBody PostPage7Request request) {
+        return easyEntityQuery.queryable(Post.class)
+                .filterConfigure(NotNullOrEmptyValueFilter.DEFAULT_PROPAGATION_SUPPORTS)
+                .where(t_post -> {
+                    t_post.title().contains(request.getTitle());
+                    t_post.user().name().contains(request.getUserName());
+                })
+                .selectAutoInclude(PostPage11Response.class).toList();
     }
 }
