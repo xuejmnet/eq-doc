@@ -44,6 +44,21 @@ import java.util.List;
 public class PostController {
     private final EasyEntityQuery easyEntityQuery;
 
+    @PostMapping("/post1")
+    public void post1() {
+        Post post = easyEntityQuery.queryable(Post.class)
+                .whereById("123")
+                .singleOrNull();
+        Post post1 = easyEntityQuery.queryable(Post.class)
+                .where(t_post -> {
+                    t_post.id().eq("123");
+                })
+                .singleOrNull();
+        List<Post> postList = easyEntityQuery.queryable(Post.class)
+                .where(t_post -> {
+                    t_post.title().contains("故事");
+                }).toList();
+    }
     @PostMapping("/page")
     public EasyPageResult<Post> page(@RequestBody PostPageRequest request) {
         return easyEntityQuery.queryable(Post.class)
@@ -214,4 +229,5 @@ public class PostController {
                 })
                 .selectAutoInclude(PostPage11Response.class).toList();
     }
+
 }
