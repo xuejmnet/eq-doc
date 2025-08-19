@@ -11,6 +11,7 @@ import com.eq.doc.dto.post.PostPageRequest;
 import com.eq.doc.dto.user.UserPageRequest;
 import com.eq.doc.dto.user.UserPageResponse;
 import com.eq.doc.dto.user.UserWithPost2Response;
+import com.eq.doc.dto.user.UserWithPost3Response;
 import com.eq.doc.dto.user.UserWithPostResponse;
 import com.eq.doc.dto.user.proxy.UserPageResponseProxy;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,12 @@ public class UserController {
     public List<UserWithPost2Response> list2() {
         return easyEntityQuery.queryable(User.class)
                 .selectAutoInclude(UserWithPost2Response.class)
+                .toList();
+    }
+    @PostMapping("/list3")
+    public List<UserWithPost3Response> list3() {
+        return easyEntityQuery.queryable(User.class)
+                .selectAutoInclude(UserWithPost3Response.class)
                 .toList();
     }
 }
