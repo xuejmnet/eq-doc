@@ -3,12 +3,14 @@ package com.eq.doc.controller;
 import com.easy.query.api.proxy.client.EasyEntityQuery;
 import com.easy.query.core.api.pagination.EasyPageResult;
 import com.easy.query.core.enums.EasyBehaviorEnum;
+import com.easy.query.core.util.EasySQLExpressionUtil;
 import com.easy.query.core.util.EasyStringUtil;
 import com.eq.doc.domain.Post;
 import com.eq.doc.domain.User;
 import com.eq.doc.dto.post.PostPageRequest;
 import com.eq.doc.dto.user.UserPageRequest;
 import com.eq.doc.dto.user.UserPageResponse;
+import com.eq.doc.dto.user.UserWithPost2Response;
 import com.eq.doc.dto.user.UserWithPostResponse;
 import com.eq.doc.dto.user.proxy.UserPageResponseProxy;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +70,12 @@ public class UserController {
     public List<UserWithPostResponse> list() {
         return easyEntityQuery.queryable(User.class)
                 .selectAutoInclude(UserWithPostResponse.class)
+                .toList();
+    }
+    @PostMapping("/list2")
+    public List<UserWithPost2Response> list2() {
+        return easyEntityQuery.queryable(User.class)
+                .selectAutoInclude(UserWithPost2Response.class)
                 .toList();
     }
 }

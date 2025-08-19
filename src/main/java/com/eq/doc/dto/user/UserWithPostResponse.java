@@ -1,12 +1,8 @@
 package com.eq.doc.dto.user;
 
-import com.easy.query.core.annotation.Column;
 import com.easy.query.core.annotation.Navigate;
 import com.easy.query.core.enums.RelationTypeEnum;
-import com.easy.query.core.expression.parser.core.extra.ExtraAutoIncludeConfigure;
-import com.easy.query.core.proxy.sql.Select;
 import com.eq.doc.domain.User;
-import com.eq.doc.domain.proxy.PostProxy;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -58,7 +54,6 @@ public class UserWithPostResponse {
     public static class InternalComment {
         private String id;
         private String content;
-        private String userId;
         private LocalDateTime createAt;
         /**
          * 评论人
