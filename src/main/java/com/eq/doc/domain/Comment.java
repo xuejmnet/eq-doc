@@ -13,6 +13,7 @@ import com.eq.doc.domain.proxy.UserProxy;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * create time 2025/8/5 21:15
@@ -39,6 +40,12 @@ public class Comment implements ProxyEntityAvailable<Comment, CommentProxy> {
     @Column(comment = "回复时间")
     private LocalDateTime createAt;
 
+
+    /**
+     * 子评论
+     **/
+    @Navigate(value = RelationTypeEnum.OneToMany, selfProperty = {CommentProxy.Fields.id}, targetProperty = {CommentProxy.Fields.parentId})
+    private List<Comment> children;
     /**
      * 评论人
      **/

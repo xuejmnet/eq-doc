@@ -38,6 +38,8 @@ public class User implements ProxyEntityAvailable<User, UserProxy> {
     @Column(comment = "创建时间")
     private LocalDateTime createAt;
 
+    private Integer postCount;
+
     /**
      * 用户发布的帖子集合
      **/
@@ -55,4 +57,10 @@ public class User implements ProxyEntityAvailable<User, UserProxy> {
      **/
     @Navigate(value = RelationTypeEnum.OneToMany, selfProperty = {UserProxy.Fields.id}, targetProperty = {LikeProxy.Fields.userId})
     private List<Like> likes;
+
+    /**
+     *
+     **/
+    @Navigate(value = RelationTypeEnum.OneToMany, selfProperty = {UserProxy.Fields.id}, targetProperty = {PostProxy.Fields.id})
+    private List<Post> postList;
 }

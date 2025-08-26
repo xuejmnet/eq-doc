@@ -14,6 +14,8 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan("com.eq.doc.*")
 public class DocApplication {
     public static void main(String[] args) {
+        String s = System.lineSeparator();
+
         SpringApplication.run(DocApplication.class, args);
     }
 }

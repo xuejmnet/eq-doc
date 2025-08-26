@@ -69,4 +69,6 @@ public class Post implements ProxyEntityAvailable<Post, PostProxy> {
             mappingClass = CategoryPost.class, targetProperty = {CategoryProxy.Fields.id},
             targetMappingProperty = {CategoryPostProxy.Fields.categoryId}, subQueryToGroupJoin = true)
     private List<Category> categoryList;
+    @Navigate(value = RelationTypeEnum.ManyToOne, selfProperty = {PostProxy.Fields.id}, targetProperty = {UserProxy.Fields.id})
+    private User item;
 }
