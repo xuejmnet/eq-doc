@@ -37,16 +37,19 @@ public class SaveUserOne2OneController {
     @EasyQueryTrack
     public Object create() {
         SaveUser saveUser = new SaveUser();
+        saveUser.setId("1");
         saveUser.setName("小明");
         saveUser.setAge(19);
         saveUser.setCreateTime(LocalDateTime.now());
 
         SaveUserExt saveUserExt = new SaveUserExt();
+        saveUserExt.setId("1");
         saveUserExt.setMoney(BigDecimal.ZERO);
         saveUserExt.setHealthy(true);
         saveUser.setSaveUserExt(saveUserExt);
 
         SaveUserAddress saveUserAddress = new SaveUserAddress();
+        saveUserAddress.setId("3");
         saveUserAddress.setProvince("浙江省");
         saveUserAddress.setCity("绍兴市");
         saveUserAddress.setArea("越城区");
@@ -124,6 +127,7 @@ public class SaveUserOne2OneController {
                 .singleNotNull();
         saveUser.setAge(new Random().nextInt());
         SaveUserAddress saveUserAddress = new SaveUserAddress();
+        saveUserAddress.setId("4");
         saveUserAddress.setProvince("浙江省");
         saveUserAddress.setCity("绍兴市");
         saveUserAddress.setArea("越城区");
