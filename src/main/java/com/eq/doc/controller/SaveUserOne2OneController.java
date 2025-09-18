@@ -1,7 +1,7 @@
 package com.eq.doc.controller;
 
 import com.easy.query.api.proxy.client.EasyEntityQuery;
-import com.easy.query.api.proxy.entity.save.OwnershipPolicyEnum;
+import com.easy.query.api.proxy.entity.save.SaveBehaviorEnum;
 import com.easy.query.core.annotation.EasyQueryTrack;
 import com.eq.doc.domain.save.SaveUser;
 import com.eq.doc.domain.save.SaveUserAddress;
@@ -228,7 +228,9 @@ public class SaveUserOne2OneController {
         xm1.setSaveUserAddress(xm2address);
         xm2.setSaveUserAddress(xm1address);
 
-        easyEntityQuery.savable(list).ownershipPolicy(OwnershipPolicyEnum.AllowOwnershipChange).executeCommand();
+        easyEntityQuery.savable(list)
+                .configure(s->s.getSaveBehavior().add(SaveBehaviorEnum.ALLOW_OWNERSHIP_CHANGE))
+                .executeCommand();
         return "ok";
     }
 
