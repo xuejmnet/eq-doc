@@ -3,6 +3,7 @@ package com.eq.doc.domain.save;
 import com.easy.query.core.annotation.Column;
 import com.easy.query.core.annotation.EasyAlias;
 import com.easy.query.core.annotation.EntityProxy;
+import com.easy.query.core.annotation.SaveKey;
 import com.easy.query.core.annotation.Table;
 import com.easy.query.core.proxy.ProxyEntityAvailable;
 import com.eq.doc.configuration.UUIDPrimaryKey;
@@ -25,6 +26,7 @@ public class SaveBankCard implements ProxyEntityAvailable<SaveBankCard , SaveBan
     @Column(primaryKey = true, primaryKeyGenerator = UUIDPrimaryKey.class)
     private String id;
     private String type;
+    @SaveKey
     private String code;
     private String uid;
     private String bankId;

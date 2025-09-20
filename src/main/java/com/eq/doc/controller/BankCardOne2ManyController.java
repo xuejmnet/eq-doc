@@ -8,6 +8,7 @@ import com.eq.doc.domain.save.SaveUser;
 import com.eq.doc.domain.save.SaveUserAddress;
 import com.eq.doc.domain.save.SaveUserExt;
 import com.eq.doc.dto.bank.card.BankUpdateRequest;
+import com.eq.doc.dto.bank.card.UserUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,11 @@ public class BankCardOne2ManyController {
         card2.setType("信用卡");
         card2.setCode("456");
         saveBankCards.add(card2);
+        SaveBankCard card3 = new SaveBankCard();
+        card3.setId("4");
+        card3.setType("信用卡");
+        card3.setCode("789");
+        saveBankCards.add(card3);
 
         easyEntityQuery.savable(saveBank).executeCommand();
         return "ok";
@@ -143,9 +149,47 @@ public class BankCardOne2ManyController {
             bankCard.setCode(saveBankCard.getCode());
             requestBankCards.add(bankCard);
         }
-        //将右边的集合合并到左侧,左侧会自动根据主键或者自定义匹配值进行匹配，默认根据主键来进行匹配
-        easyEntityQuery.mergeCollection(saveBank.getSaveBankCards(), requestBankCards);
+        saveBank.setSaveBankCards(requestBankCards);
         easyEntityQuery.savable(saveBank).executeCommand();
+        return "ok";
+    }
+
+
+    @PostMapping("/createUser")
+    @Transactional(rollbackFor = Exception.class)
+    @EasyQueryTrack
+    public Object createUser() {
+
+        SaveUser saveUser = new SaveUser();
+        saveUser.setId("1");
+        saveUser.setName("小明");
+        saveUser.setAge(20);
+        List<SaveBankCard> saveBankCards = easyEntityQuery.queryable(SaveBankCard.class)
+                .whereByIds(Arrays.asList("2", "3"))
+                .toList();
+        saveUser.setSaveBankCards(saveBankCards);
+
+        easyEntityQuery.savable(saveUser).executeCommand();
+        return "ok";
+    }
+    @PostMapping("/update3")
+    @Transactional(rollbackFor = Exception.class)
+    @EasyQueryTrack
+    public Object update3(@RequestBody UserUpdateRequest request) {
+        SaveUser saveUser = easyEntityQuery.queryable(SaveUser.class)
+                .includes(save_user -> save_user.saveBankCards())
+                .singleNotNull();
+
+        saveUser.setName(request.getName());
+        saveUser.setAge(request.getAge());
+        List<String> codes = request.getSaveBankCards().stream().map(o -> o.getCode()).toList();
+        List<SaveBankCard> requestBankCards = easyEntityQuery.queryable(SaveBankCard.class)
+                .where(save_bank_card -> {
+                    save_bank_card.code().in(codes);
+                }).toList();
+
+        saveUser.setSaveBankCards(requestBankCards);
+        easyEntityQuery.savable(saveUser).executeCommand();
         return "ok";
     }
 }
