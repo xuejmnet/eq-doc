@@ -46,4 +46,10 @@ public class SysUser implements ProxyEntityAvailable<SysUser, SysUserProxy> {
             targetProperty = {SysRole.Fields.id},
             targetMappingProperty = {UserRole.Fields.roleId}, cascade = CascadeTypeEnum.DELETE)
     private List<SysRole> sysRoleList;
+
+    /**
+     * 创建userRole的关系
+     **/
+    @Navigate(value = RelationTypeEnum.OneToMany, selfProperty = {SysUser.Fields.id}, targetProperty = {UserRole.Fields.userId},cascade = CascadeTypeEnum.DELETE)
+    private List<UserRole> userRoleList;
 }

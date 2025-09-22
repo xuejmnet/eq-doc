@@ -3,8 +3,11 @@ package com.eq.doc.domain.save;
 import com.easy.query.core.annotation.Column;
 import com.easy.query.core.annotation.EasyAlias;
 import com.easy.query.core.annotation.EntityProxy;
+import com.easy.query.core.annotation.Navigate;
 import com.easy.query.core.annotation.SaveKey;
 import com.easy.query.core.annotation.Table;
+import com.easy.query.core.enums.CascadeTypeEnum;
+import com.easy.query.core.enums.RelationTypeEnum;
 import com.easy.query.core.proxy.ProxyEntityAvailable;
 import com.eq.doc.configuration.UUIDPrimaryKey;
 import com.eq.doc.domain.save.proxy.SaveBankCardProxy;
@@ -22,7 +25,7 @@ import lombok.experimental.FieldNameConstants;
 @EntityProxy
 @FieldNameConstants
 @EasyAlias("save_bank_card")
-public class SaveBankCard implements ProxyEntityAvailable<SaveBankCard , SaveBankCardProxy> {
+public class SaveBankCard implements ProxyEntityAvailable<SaveBankCard, SaveBankCardProxy> {
     @Column(primaryKey = true, primaryKeyGenerator = UUIDPrimaryKey.class)
     private String id;
     private String type;
@@ -30,4 +33,16 @@ public class SaveBankCard implements ProxyEntityAvailable<SaveBankCard , SaveBan
     private String code;
     private String uid;
     private String bankId;
+
+    /**
+     * 所属银行
+     **/
+    @Navigate(value = RelationTypeEnum.ManyToOne, selfProperty = {SaveBankCard.Fields.bankId}, targetProperty = {SaveBank.Fields.id}, cascade = CascadeTypeEnum.DELETE)
+    private SaveBank saveBank;
+
+    /**
+     *
+     **/
+    @Navigate(value = RelationTypeEnum.ManyToOne, selfProperty = {SaveBankCard.Fields.uid}, targetProperty = {SaveUser.Fields.id})
+    private SaveUser saveUser;
 }
