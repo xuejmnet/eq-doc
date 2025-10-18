@@ -154,6 +154,34 @@ public class BankCardOne2ManyController {
         return "ok";
     }
 
+    @PostMapping("/update3")
+    @Transactional(rollbackFor = Exception.class)
+    @EasyQueryTrack
+    public Object update3(@RequestBody BankUpdateRequest request) {
+
+        SaveBank saveBank = easyEntityQuery.queryable(SaveBank.class)
+                .includes(save_bank -> save_bank.saveBankCards())
+                .whereById(request.getId()).singleNotNull();
+
+        saveBank.setName(request.getName());
+        saveBank.setAddress(request.getAddress());
+
+        ArrayList<SaveBankCard> requestBankCards = new ArrayList<>();
+        for (BankUpdateRequest.InternalSaveBankCards saveBankCard : request.getSaveBankCards()) {
+            SaveBankCard bankCard = new SaveBankCard();
+            bankCard.setId(saveBankCard.getId());
+            bankCard.setType(saveBankCard.getType());
+            bankCard.setCode(saveBankCard.getCode());
+
+            //会校验saveBankCard.getId()的id是否在当前追踪上下文如果不是则要做插入那么意味着这个id应该被替换
+            easyEntityQuery.saveEntitySetPrimaryKey(bankCard);
+
+            requestBankCards.add(bankCard);
+        }
+        saveBank.setSaveBankCards(requestBankCards);
+        easyEntityQuery.savable(saveBank).executeCommand();
+        return "ok";
+    }
 
     @PostMapping("/createUser")
     @Transactional(rollbackFor = Exception.class)
