@@ -2,6 +2,7 @@ package com.eq.doc.controller;
 
 import com.easy.query.api.proxy.client.EasyEntityQuery;
 import com.easy.query.core.annotation.EasyQueryTrack;
+import com.easy.query.core.basic.extension.track.EntityState;
 import com.eq.doc.domain.save.SaveBank;
 import com.eq.doc.domain.save.SaveBankCard;
 import com.eq.doc.domain.save.SaveUser;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -175,6 +177,11 @@ public class BankCardOne2ManyController {
 
             //会校验saveBankCard.getId()的id是否在当前追踪上下文如果不是则要做插入那么意味着这个id应该被替换
             easyEntityQuery.saveEntitySetPrimaryKey(bankCard);
+//
+//            EntityState trackEntityState = easyEntityQuery.getTrackEntityState(bankCard);
+//            if(trackEntityState==null){
+//                bankCard.setId(UUID.randomUUID().toString());
+//            }
 
             requestBankCards.add(bankCard);
         }
