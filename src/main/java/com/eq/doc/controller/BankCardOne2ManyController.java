@@ -100,7 +100,7 @@ public class BankCardOne2ManyController {
     public Object update(@RequestBody BankUpdateRequest request) {
 
         SaveBank saveBank = easyEntityQuery.queryable(SaveBank.class)
-                .includes(save_bank -> save_bank.saveBankCards())
+                .include(save_bank -> save_bank.saveBankCards())
                 .whereById(request.getId()).singleNotNull();
 
         saveBank.setName(request.getName());
@@ -137,7 +137,7 @@ public class BankCardOne2ManyController {
     public Object update2(@RequestBody BankUpdateRequest request) {
 
         SaveBank saveBank = easyEntityQuery.queryable(SaveBank.class)
-                .includes(save_bank -> save_bank.saveBankCards())
+                .include(save_bank -> save_bank.saveBankCards())
                 .whereById(request.getId()).singleNotNull();
 
         saveBank.setName(request.getName());
@@ -162,7 +162,7 @@ public class BankCardOne2ManyController {
     public Object update3(@RequestBody BankUpdateRequest request) {
 
         SaveBank saveBank = easyEntityQuery.queryable(SaveBank.class)
-                .includes(save_bank -> save_bank.saveBankCards())
+                .include(save_bank -> save_bank.saveBankCards())
                 .whereById(request.getId()).singleNotNull();
 
         saveBank.setName(request.getName());
