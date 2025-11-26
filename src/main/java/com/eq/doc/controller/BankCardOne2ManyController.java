@@ -212,7 +212,7 @@ public class BankCardOne2ManyController {
 //    @EasyQueryTrack
 //    public Object update3(@RequestBody UserUpdateRequest request) {
 //        SaveUser saveUser = easyEntityQuery.queryable(SaveUser.class)
-//                .includes(save_user -> save_user.saveBankCards())
+//                .include(save_user -> save_user.saveBankCards())
 //                .singleNotNull();
 //
 //        saveUser.setName(request.getName());
