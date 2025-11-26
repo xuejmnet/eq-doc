@@ -207,24 +207,24 @@ public class BankCardOne2ManyController {
         easyEntityQuery.savable(saveUser).executeCommand();
         return "ok";
     }
-    @PostMapping("/update3")
-    @Transactional(rollbackFor = Exception.class)
-    @EasyQueryTrack
-    public Object update3(@RequestBody UserUpdateRequest request) {
-        SaveUser saveUser = easyEntityQuery.queryable(SaveUser.class)
-                .includes(save_user -> save_user.saveBankCards())
-                .singleNotNull();
-
-        saveUser.setName(request.getName());
-        saveUser.setAge(request.getAge());
-        List<String> codes = request.getSaveBankCards().stream().map(o -> o.getCode()).toList();
-        List<SaveBankCard> requestBankCards = easyEntityQuery.queryable(SaveBankCard.class)
-                .where(save_bank_card -> {
-                    save_bank_card.code().in(codes);
-                }).toList();
-
-        saveUser.setSaveBankCards(requestBankCards);
-        easyEntityQuery.savable(saveUser).executeCommand();
-        return "ok";
-    }
+//    @PostMapping("/update3")
+//    @Transactional(rollbackFor = Exception.class)
+//    @EasyQueryTrack
+//    public Object update3(@RequestBody UserUpdateRequest request) {
+//        SaveUser saveUser = easyEntityQuery.queryable(SaveUser.class)
+//                .includes(save_user -> save_user.saveBankCards())
+//                .singleNotNull();
+//
+//        saveUser.setName(request.getName());
+//        saveUser.setAge(request.getAge());
+//        List<String> codes = request.getSaveBankCards().stream().map(o -> o.getCode()).toList();
+//        List<SaveBankCard> requestBankCards = easyEntityQuery.queryable(SaveBankCard.class)
+//                .where(save_bank_card -> {
+//                    save_bank_card.code().in(codes);
+//                }).toList();
+//
+//        saveUser.setSaveBankCards(requestBankCards);
+//        easyEntityQuery.savable(saveUser).executeCommand();
+//        return "ok";
+//    }
 }

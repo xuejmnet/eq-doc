@@ -28,7 +28,7 @@ public class PostPage10Response {
     private String userId;
     private LocalDateTime publishAt;
 
-    private String userName;
+    @SuppressWarnings("EasyQueryFieldMissMatch")private String userName;
 
     private String commentContent;
 
